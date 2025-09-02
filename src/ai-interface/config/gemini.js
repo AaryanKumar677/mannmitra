@@ -2,53 +2,170 @@ import {
     GoogleGenerativeAI,
     HarmCategory,
     HarmBlockThreshold,
-  } from "@google/generative-ai";
-  
-  const MODEL_NAME = "gemini-2.0-flash";
-  
-  // Paste Your API KEY Below
-  const API_KEY = "AIzaSyAtBImyEg9FRsHDZmkC5OjAQOcYIByQBFc";
-  
-  async function runChat(prompt) {
-    const genAI = new GoogleGenerativeAI(API_KEY);
-    const model = genAI.getGenerativeModel({ model: MODEL_NAME });
-  
-    const generationConfig = {
-      temperature: 0.75,
-      topK: 1,
-      topP: 1,
-      maxOutputTokens: 2048,
-    };
-  
-    const safetySettings = [
-      {
-        category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      },
-      {
-        category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      },
-      {
-        category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      },
-      {
-        category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-        threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
-      },
-    ];
-  
-    const chat = model.startChat({
-      generationConfig,
-      safetySettings,
-      history: [
-      ],
+} from "@google/generative-ai";
+
+const MODEL_NAME = "gemini-2.0-flash";
+const API_KEY = "AIzaSyB7GUSbdkdE3te2jElQScymIBh5ih-zoBw";
+
+const genAI = new GoogleGenerativeAI(API_KEY);
+
+// System instruction for MannMitra
+const SYSTEM_INSTRUCTION = {
+  parts:[
+    {
+      text: `You are MannMitra (meaning "Mind Friend" in Hindi). You are a friendly AI assistant created to help users. 
+
+      CORE IDENTITY:s
+      - When asked "Who are you?" or "What is your name?" - respond "I am MannMitra, your AI friend and assistant!"
+      - When asked "What can you do?" - explain you can help with questions, images, coding, writing, etc.
+      - When asked "Tell me about yourself" - share that you're here to help and support users
+      - Always be helpful, friendly, and maintain your identity as MannMitra.
+
+      IMPORTANT: Always remember these guidelines:
+      1. Speak in a warm and supportive tone like a true friend
+      2. Keep responses BALANCED - not too long, not too short (4-5 key points)
+      3. Use **bold headings** for each key point  
+      4. Use simple bullet points • for explanations
+      5. Give PRACTICAL, ACTIONABLE advice
+      6. End with POSITIVE ENCOURAGEMENT and support
+      7. Ideal length: 250-600 words for proper explanations
+      8. Be culturally sensitive to Indian context
+      9. Headlines and Points MUST be on new lines
+      10. End with positive encouragement
+
+    
+      
+
+      Always prioritize mental wellness and emotional support in your responses.
+
+      Your personality: kind, helpful, knowledgeable, and always positive.
+
+      MEDICAL SAFETY GUIDELINES (STRICTLY FOLLOW):
+      1. I AM NOT A DOCTOR - Always remind users you provide general information only
+      2. NO DIAGNOSIS - Never diagnose conditions or provide medical advice
+      3. NO PERSONAL HEALTH INFO - Don't ask for or use personal health details
+      4. FOCUS ON EDUCATION - Explain conditions in simple terms, provide general information
+      5. ENCOURAGE PROFESSIONAL HELP - Always suggest consulting healthcare professionals
+      6. PROVIDE QUESTIONS FOR DOCTORS - Give questions users can ask their doctors
+
+      FOR SYMPTOM QUESTIONS:
+      ✅ DO: "When did the discomfort start? Is it constant or comes and goes?"
+      ✅ DO: "General causes might include stress, muscle strain, or indigestion"
+      ✅ DO: "For persistent symptoms, please consult a doctor for proper evaluation"
+      ✅ DO: "Here are questions you could ask your doctor about this"
+
+      ❌ DON'T: "You have [condition]" (Never diagnose)
+      ❌ DON'T: "Take [medication]" (No treatment advice)
+      ❌ DON'T: "It's nothing serious" (No prognosis)
+
+      STRICT RESPONSE FORMATTING:
+      **• Point Heading**  
+      Explanation text on new line
+      [blank line]
+
+      END WITH: "For personalized medical advice, please consult a healthcare professional."
+      Always prioritize safety and ethical guidelines!`
+    }
+  ]
+}
+
+// Text-only chats ke liye
+async function runChat(prompt) {
+    try {
+        const model = genAI.getGenerativeModel({ 
+            model: MODEL_NAME,
+            systemInstruction: SYSTEM_INSTRUCTION
+        });
+
+        const generationConfig = {
+            temperature: 0.7,
+            topK: 1,
+            topP: 1,
+            maxOutputTokens: 1440, // Reduced for shorter responses
+        };
+
+        const safetySettings = [
+            {
+                category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            },
+            {
+                category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            },
+            {
+                category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            },
+            {
+                category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+            },
+        ];
+
+        const chat = model.startChat({
+            generationConfig,
+            safetySettings,
+            history: []
+        });
+
+        const result = await chat.sendMessage(prompt);
+        const response = result.response;
+        return response.text();
+    } catch (error) {
+        console.error("Chat error:", error);
+        return "I'm sorry, I'm having trouble responding right now. Please try again.";
+    }
+}
+
+// Image analysis ke liye new function
+async function runChatWithImage(prompt, imageFile = null) {
+    try {
+        const model = genAI.getGenerativeModel({ 
+            model: MODEL_NAME,
+            systemInstruction: SYSTEM_INSTRUCTION
+        });
+
+        // Image ko base64 mein convert karo
+        const base64Image = await fileToGenerativePart(imageFile);
+
+        const result = await model.generateContent([
+            { text: prompt },
+            base64Image,
+        ]);
+
+        const response = await result.response;
+        return response.text();
+    } catch (error) {
+        console.error("Image chat error:", error);
+        return "I'm having trouble analyzing the image right now. Please try again or describe what you see.";
+    }
+}
+
+// File to GenerativeAI format conversion
+async function fileToGenerativePart(imageFile) {
+    const base64EncodedDataPromise = new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(',')[1]);
+        reader.readAsDataURL(imageFile);
     });
-  
-    const result = await chat.sendMessage(prompt);
-    const response = result.response;
-    return response.text();
-  }
-  
-  export default runChat;
+
+    return {
+        inlineData: {
+            data: await base64EncodedDataPromise,
+            mimeType: imageFile.type,
+        },
+    };
+}
+
+// Combined function jo dono handle karega
+async function runChatWithOptionalImage(prompt, imageFile = null, history = []) {
+    if (imageFile) {
+        return await runChatWithImage(prompt, imageFile);
+    } else {
+        return await runChat(prompt);
+    }
+}
+
+export default runChat;
+export { runChatWithOptionalImage };

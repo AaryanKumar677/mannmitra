@@ -19,6 +19,8 @@
 .main-container {
     max-width: 900px;
     margin: auto;
+    height: auto;
+    overflow-y: visible;
 }
 .greet {
     margin: 50px 0px;
@@ -113,14 +115,19 @@
     text-align: center;
     font-weight: 300;
 }
+
 .result {
     padding: 0% 5%;
     max-height: 70vh;
-    overflow-y: scroll;
+    overflow-y: auto;
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
 }
-.result::-webkit-scrollbar{
-    display:none;
+
+.result::-webkit-scrollbar {
+    display: none;
 }
+
 .result-title {
     margin: 40px 0px;
     display: flex;
@@ -136,6 +143,25 @@
     align-items: start;
     gap: 20px;
 }
+.result-data p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin: 12px 0;
+}
+
+.result-data b {
+    color: #4b90ff;
+    font-weight: 600;
+    display: block;
+    margin: 15px 0 5px 0;
+    font-size: 17px;
+}
+
+/* Ensure proper spacing */
+.result-data p:has(> b) {
+    margin-bottom: 8px;
+}
+
 .loader {
     width: 100%;
     display: flex;
@@ -151,6 +177,34 @@
     background-size: 800px 50px;
     height: 20px;
 }
+
+/* Crisis alert styles */
+.crisis-alert {
+    background: #ff4757;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.urgent-support {
+    background: #ffa502;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.emergency-contacts p, .support-contacts p {
+    margin: 8px 0;
+    font-size: 15px;
+    line-height: 1.4;
+}
+
+.crisis-alert h3, .urgent-support h3 {
+    margin: 0 0 15px 0;
+    font-size: 20px;
+} 
 
 @keyframes loader {
     0% {
@@ -221,7 +275,6 @@
     color: #a1a1a6;
 }
 
-/* Icons always white background - dono modes mein */
 .dark-mode .search-box img {
     background-color: white !important;
     filter: none !important;
@@ -249,4 +302,77 @@
     padding: 8px;
     border-radius: 50%;
     margin-right: 10px;
+}
+
+/* ========== IMAGE UPLOAD STYLES ========== */
+.image-preview {
+    position: relative;
+    margin: 10px 0 5px 0;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.image-preview img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.remove-image-btn:hover {
+    background: #ff3333;
+    transform: scale(1.1);
+}
+/* Sent image in chat */
+.user-message {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sent-image {
+  margin-top: 10px;
+}
+
+.sent-image img {
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 10px;
+  border: 2px solid #4b90ff;
+  box-shadow: 0 2px 8px rgba(75, 144, 255, 0.3);
+}
+
+/* Dark mode adjustments */
+.dark-mode .image-preview img {
+    border: 2px solid #555;
+}
+.dark-mode .sent-image img {
+  border: 2px solid #4b90ff;
+}
+
+/* Mobile responsive */
+@media (max-width: 600px) {
+    .image-preview img {
+        max-width: 150px;
+        max-height: 120px;
+    }
 }
