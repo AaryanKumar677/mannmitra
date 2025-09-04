@@ -65,7 +65,6 @@ const SYSTEM_INSTRUCTION = {
 
       END WITH: "For personalized medical advice, please consult a healthcare professional."
       Always prioritize safety and ethical guidelines!`
-
     }
   ]
 }
