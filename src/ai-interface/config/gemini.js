@@ -59,7 +59,11 @@ const SYSTEM_INSTRUCTION = {
       ❌ DON'T: "It's nothing serious" (No prognosis)
 
       STRICT RESPONSE FORMATTING:
-      *• Point Heading*  
+      Headings in bold with "###" markdown
+      Explanations in simple bullet points with "- " in bold 
+      Ensure each heading and point starts on a new line
+      and each heading text should be in little big
+      *Point Heading*
       Explanation text on new line
       [blank line]
 

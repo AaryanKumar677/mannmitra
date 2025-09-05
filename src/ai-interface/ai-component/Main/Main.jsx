@@ -4,7 +4,6 @@ import { assets } from '../../../assets/assets'
 import { Context } from '../../context/Context'
 import MarkdownIt from "markdown-it";
 
-
 const Main = () => {
   const { conversations, currentChatId, onSent, setInput, input, loading, showResult } = useContext(Context);
   const currentChat = conversations.find(chat => chat.id === currentChatId);
@@ -91,8 +90,8 @@ const Main = () => {
               {currentMessages.map((msg, index) => {
                 const cleanText = msg.text
                   ? msg.text
-                      .replace(/\*\*• (.*?)\*\*/g, "### • $1")   // bold bullet → heading
-                      .replace(/• /g, "- ")                   // bullet → markdown list
+                      .replace(/\*\*• (.*?)\*\*/g, "### • $1")
+                      .replace(/• /g, "- ")
                   : "";
 
                 return (

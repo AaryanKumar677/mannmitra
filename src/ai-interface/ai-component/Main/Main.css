@@ -177,7 +177,7 @@
 .ai-message-box .message-text h1,
 .ai-message-box .message-text h2,
 .ai-message-box .message-text h3 {
-  color: #4b90ff;   /* blue heading */
+  color: #4b90ff;
   font-weight: 600;
   margin-top: 18px;
   margin-bottom: 10px;
@@ -235,9 +235,9 @@
 }
 
 .user-message-box .message-text {
-  color: #000000;   /* dark mode me safed */
+  color: #000000;
   font-size: 17px;
-  line-height: 1.6;
+  line-height: 2.1;
 }
 
 /* AI ka text thoda readable safed */
@@ -342,7 +342,7 @@
 }
 
 .dark-mode .user-message-box .message-text {
-  color: #ffffff;
+  color: #e5e7eb;
 }
 
 .dark-mode .ai-message-box .message-text {
