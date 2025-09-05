@@ -2,11 +2,15 @@ import React, { useContext, useState, useEffect, useRef } from 'react'
 import '../Main/Main.css'
 import { assets } from '../../../assets/assets'
 import { Context } from '../../context/Context'
+import MarkdownIt from "markdown-it";
+
 
 const Main = () => {
-  const { onSent, recentPrompt, showResult, loading, resultData, setInput, input, prevPrompts } = useContext(Context);
-  
-  // Theme state and function add karein
+  const { conversations, currentChatId, onSent, setInput, input, loading, showResult } = useContext(Context);
+  const currentChat = conversations.find(chat => chat.id === currentChatId);
+  const currentMessages = currentChat ? currentChat.messages : [];
+  const md = new MarkdownIt();
+
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
@@ -24,7 +28,6 @@ const Main = () => {
     }
   };
 
-  // Component mount par theme check karein
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
@@ -75,6 +78,7 @@ const Main = () => {
     }
   };
 
+
   return (
     <div className='main'>
       <div className="nav">
@@ -82,57 +86,66 @@ const Main = () => {
         <img src={assets.user_icon} alt="" />
       </div>
       <div className="main-container">
-        {showResult ?
-          
-        <div className="result">
-            <div className='result-title'>
-              <img src={assets.user_icon} alt="" />
-              <div className="user-message">
-                <p>{typeof recentPrompt === 'object' ? recentPrompt.text : recentPrompt}</p>
-                {typeof recentPrompt === 'object' && recentPrompt.image && (
-                  <div className="sent-image">
-                    <img src={recentPrompt.image} alt="Sent by user" />
+        {currentMessages.length > 0 ? (
+          <div className="result">
+              {currentMessages.map((msg, index) => {
+                const cleanText = msg.text
+                  ? msg.text
+                      .replace(/\*\*• (.*?)\*\*/g, "### • $1")   // bold bullet → heading
+                      .replace(/• /g, "- ")                   // bullet → markdown list
+                  : "";
+
+                return (
+                  <div key={index} className={msg.type === 'user' ? 'user-message-box' : 'ai-message-box'}>
+                    <img src={msg.type === 'user' ? assets.user_icon : assets.gemini_icon} alt="" />
+                    
+                    <div className="message">
+                      {msg.text && (
+                        <div
+                          className="message-text"
+                          dangerouslySetInnerHTML={{ __html: md.render(cleanText) }}
+                        ></div>
+                      )}
+
+                      {msg.image && <img src={msg.image} alt="sent" />}
+                      {msg.type === 'ai' && loading && index === currentMessages.length - 1 ? (
+                        <div className="loader">
+                          <hr className="animated-bg" />
+                          <hr className="animated-bg" />
+                          <hr className="animated-bg" />
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
-                )}
-              </div>
+                );
+              })}
             </div>
-            <div className="result-data">
-              <img src={assets.gemini_icon} alt="" />
-              {loading
-                ? <div className="loader">
-                  <hr className="animated-bg" />
-                  <hr className="animated-bg" />
-                  <hr className="animated-bg" />
+            ) : (
+              <>
+                <div className="greet">
+                  <p><span>Hello, Aaryan</span></p>
+                  <p>How can I help you today?</p>
                 </div>
-                : <p dangerouslySetInnerHTML={{ __html: resultData }}></p>
-              }
-            </div>
-          </div>
-          : <>
-            <div className="greet">
-              <p><span>Hello, Aaryan</span></p>
-              <p>How can I help you today?</p>
-            </div>
-            <div className="cards">
-              <div className="card" onClick={() => handleCardClick("Help me manage exam stress and anxiety")}>
-                <p>Help me manage exam stress and anxiety</p>
-                <img src={assets.compass_icon} alt="" />
-              </div>
-              <div className="card" onClick={() => handleCardClick("Help me calm my anxiety and worries")}>
-                <p>Help me calm my anxiety and worries</p>
-                <img src={assets.bulb_icon} alt="" />
-              </div>
-              <div className="card" onClick={() => handleCardClick("Please suggest a daily mental wellness routine")}>
-                <p>Please suggest a daily mental wellness routine</p>
-                <img src={assets.message_icon} alt="" />
-              </div>
-              <div className="card" onClick={() => handleCardClick("Please suggest some self-care activities for today")}>
-                <p>Please suggest some self-care activities for today</p>
-                <img src={assets.code_icon} alt="" />
-              </div>
-            </div>
-          </>
-        }
+                <div className="cards">
+                  <div className="card" onClick={() => handleCardClick("Help me manage exam stress and anxiety")}>
+                    <p>Help me manage exam stress and anxiety</p>
+                    <img src={assets.compass_icon} alt="" />
+                  </div>
+                  <div className="card" onClick={() => handleCardClick("Help me calm my anxiety and worries")}>
+                    <p>Help me calm my anxiety and worries</p>
+                    <img src={assets.bulb_icon} alt="" />
+                  </div>
+                  <div className="card" onClick={() => handleCardClick("Please suggest a daily mental wellness routine")}>
+                    <p>Please suggest a daily mental wellness routine</p>
+                    <img src={assets.message_icon} alt="" />
+                  </div>
+                  <div className="card" onClick={() => handleCardClick("Please suggest some self-care activities for today")}>
+                    <p>Please suggest some self-care activities for today</p>
+                    <img src={assets.code_icon} alt="" />
+                  </div>
+                </div>
+              </>
+            )}
 
         {/* Selected image preview */}
         {selectedImage && (

@@ -4,14 +4,17 @@ import runChat, { runChatWithOptionalImage } from "../config/gemini";
 export const Context = createContext();
 
 const ContextProvider = (props) => {
-
-    const [prevPrompts, setPrevPrompts] = useState([]);
+    
+    const [conversations, setConversations] = useState([]);
+    // const [prevPrompts, setPrevPrompts] = useState([]);
     const [input, setInput] = useState("");
-    const [recentPrompt, setRecentPrompt] = useState("");
+    const [recentPrompt, setRecentPrompt] = useState(null);
     const [showResult, setShowResult] = useState(false)
     const [loading, setLoading] = useState(false)
     const [resultData, setResultData] = useState("")
     const [sentImage, setSentImage] = useState(null);
+
+    const [currentChatId, setCurrentChatId] = useState(null);
 
     // Crisis detection function
     const checkForCrisis = (prompt) => {
@@ -44,9 +47,20 @@ const ContextProvider = (props) => {
     }
 
     const onSent = async (prompt, imageFile = null) => {
+        // const finalPrompt = prompt !== undefined ? prompt : input;
+        // if (!finalPrompt || finalPrompt.trim() === "") return;
         let finalPrompt = prompt !== undefined ? prompt : input;
+
+        const chatId = currentChatId || Date.now().toString();
+        if (!currentChatId) {
+            setCurrentChatId(chatId);
+            setConversations(prev => [
+            ...prev,
+            { id: chatId, title: finalPrompt.slice(0, 20), messages: [] }
+            ]);
+        }
     
-        // Card-specific prompts ko optimize karo
+        
         if (finalPrompt.includes("exam stress") || finalPrompt.includes("exam anxiety")) {
             finalPrompt = "Provide specific techniques for managing exam stress and test anxiety. Include study strategies, relaxation techniques during exams, and mindset tips. Focus on practical actionable advice.";
         } 
@@ -59,8 +73,17 @@ const ContextProvider = (props) => {
         else if (finalPrompt.includes("self-care activities")) {
             finalPrompt = "Recommend specific self-care activities that can be done today. Include both quick 5-minute activities and longer self-care practices with step-by-step guidance.";
         }
-        // Crisis check first - before anything else
+
         const crisisStatus = checkForCrisis(finalPrompt);
+        const userMessage = {
+
+            type: "user",
+            text: finalPrompt,
+            image: imageFile ? URL.createObjectURL(imageFile) : null,
+            timestamp: new Date().toLocaleTimeString(),
+            chatId: chatId,
+        };
+
         if (crisisStatus === "CRISIS_ALERT") {
             const crisisResponse = `
                 <div class="crisis-alert">
@@ -75,23 +98,16 @@ const ContextProvider = (props) => {
                     <p>Please reach out to these resources immediately. You don't have to go through this alone.</p>
                 </div>
             `;
+
+            setConversations((prev) =>
+                prev.map((chat) =>
+                chat.id === chatId
+                    ? { ...chat, messages: [...chat.messages, userMessage, { type: "ai", text: urgentResponse, timestamp: new Date().toLocaleTimeString(), chatId }] }
+                    : chat
+                )
+            );
             
-            // Add user message to history
-            const userMessage = {
-                type: 'user',
-                text: prompt !== undefined ? prompt : input,
-                image: imageFile ? URL.createObjectURL(imageFile) : null,
-                timestamp: new Date().toLocaleTimeString()
-            };
             
-            // Add AI response to history
-            const aiResponse = {
-                type: 'ai',
-                text: crisisResponse,
-                timestamp: new Date().toLocaleTimeString()
-            };
-            
-            setPrevPrompts(prev => [...prev, userMessage, aiResponse]);
             setResultData(crisisResponse);
             setLoading(false);
             setShowResult(true);
@@ -113,73 +129,80 @@ const ContextProvider = (props) => {
             `;
             
             // Add user message to history
-            const userMessage = {
-                type: 'user',
-                text: prompt !== undefined ? prompt : input,
-                image: imageFile ? URL.createObjectURL(imageFile) : null,
-                timestamp: new Date().toLocaleTimeString()
-            };
+            setConversations((prev) =>
+                prev.map((chat) =>
+                chat.id === chatId
+                    ? { ...chat, messages: [...chat.messages, userMessage, { type: "ai", text: urgentResponse, timestamp: new Date().toLocaleTimeString(), chatId }] }
+                    : chat
+                )
+            );
             
-            // Add AI response to history
-            const aiResponse = {
-                type: 'ai',
-                text: urgentResponse,
-                timestamp: new Date().toLocaleTimeString()
-            };
             
-            setPrevPrompts(prev => [...prev, userMessage, aiResponse]);
             setResultData(urgentResponse);
             setLoading(false);
             setShowResult(true);
             return;
         }
 
-        // Normal processing for non-crisis messages
-        setResultData("")
-        setLoading(true)
-        setShowResult(true)
 
-        setRecentPrompt(prompt !== undefined ? prompt : input);
+        setResultData("");
+        setLoading(true);
+        setShowResult(true);
         
         setRecentPrompt({
             text: prompt !== undefined ? prompt : input,
             image: imageFile ? URL.createObjectURL(imageFile) : null
         });
         // Add user message to history
-        const userMessage = {
-            type: 'user',
-            text: prompt !== undefined ? prompt : input,
-            image: imageFile ? URL.createObjectURL(imageFile) : null,
-            timestamp: new Date().toLocaleTimeString()
-        };
-        setPrevPrompts(prev => [...prev, userMessage]);
+        setConversations((prev) =>
+            prev.map((chat) =>
+                chat.id === chatId
+                ? { ...chat, messages: [...chat.messages, userMessage] }
+                : chat
+            )
+        );
+        
         
         let response;
         try {
-            const conversationHistory = prevPrompts.map(msg => ({
-                role: msg.type === 'user' ? 'user' : 'model',
-                parts: [{ text: msg.text }]
-            }));
-            if (prompt !== undefined ? prompt : input) {
-                setInput(finalPrompt, conversationHistory);
-                
-            }
-            
-            let response;
-            if (prompt !== undefined) {
-                response = await runChatWithOptionalImage(finalPrompt, imageFile, conversationHistory);
-            }
-            else {
-                response = await runChatWithOptionalImage(finalPrompt, imageFile, conversationHistory);
-            }
+            let updatedMessages = [
+                ...(conversations.find((c) => c.id === chatId)?.messages || []),
+                userMessage,
+            ];
 
-            // Add AI response to history
+            // Update state
+            setConversations((prev) =>
+                prev.map((chat) =>
+                    chat.id === chatId ? { ...chat, messages: updatedMessages } : chat
+                )
+            );
+            
+            const conversationHistory =
+                conversations.find((c) => c.id === chatId)?.messages.map((msg) => ({
+                    role: msg.type === "user" ? "user" : "model",
+                    parts: [{ text: msg.text }],
+                })) || [];
+
+            response = await runChatWithOptionalImage(
+                finalPrompt,
+                imageFile,
+                conversationHistory
+            );
+            
             const aiResponse = {
                 type: 'ai',
                 text: response,
-                timestamp: new Date().toLocaleTimeString()
+                timestamp: new Date().toLocaleTimeString(),
+                chatId: chatId
             };
-            setPrevPrompts(prev => [...prev, aiResponse]);
+
+            setConversations((prev) =>
+                prev.map((chat) =>
+                chat.id === chatId
+                    ? { ...chat, messages: [...chat.messages, aiResponse] }
+                    : chat
+                )
+            );
 
             let responseArray = response.split('**');
             let newArray = "";
@@ -204,9 +227,17 @@ const ContextProvider = (props) => {
             const aiResponse = {
                 type: 'ai',
                 text: errorResponse,
-                timestamp: new Date().toLocaleTimeString()
+                timestamp: new Date().toLocaleTimeString(),
+                chatId: chatId
             };
-            setPrevPrompts(prev => [...prev, aiResponse]);
+
+            setConversations((prev) =>
+                prev.map((chat) =>
+                chat.id === chatId
+                    ? { ...chat, messages: [...chat.messages, aiResponse] }
+                    : chat
+                )
+            );
             
             setResultData(errorResponse);
         }
@@ -214,18 +245,26 @@ const ContextProvider = (props) => {
         setLoading(false);
         setInput("")
         setSentImage(null);
-    }
+    };
 
-    const newChat = async () => {
+    const newChat = () => {
+        const chatId = Date.now().toString();
+        const newConversation = {
+            id: chatId,
+            title: "New Chat",
+            messages: []
+        };
+
+        setConversations(prev => [...prev, newConversation]); // ✅ add new empty chat
+        setCurrentChatId(chatId); // ✅ set active chat 
         setLoading(false);
         setShowResult(false);
-        setPrevPrompts([]); // Clear conversation history
         setSentImage(null);
-    }
+        };
 
     const contextValue = {
-        prevPrompts,
-        setPrevPrompts,
+        conversations,
+        setConversations,
         onSent,
         setRecentPrompt,
         recentPrompt,
@@ -236,14 +275,16 @@ const ContextProvider = (props) => {
         setInput,
         newChat,
         sentImage,
-        setSentImage
-    }
+        setSentImage,
+        currentChatId,
+        setCurrentChatId
+    };
 
     return (
         <Context.Provider value={contextValue}>
             {props.children}
         </Context.Provider>
-    )
-}
+    );
+};
 
 export default ContextProvider;

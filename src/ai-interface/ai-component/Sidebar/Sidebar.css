@@ -3,12 +3,14 @@
     display: inline-flex;
     flex-direction: column;
     justify-content: space-between;
-    background-color: #f0f4f9;
+    background-color: #252424;
     padding: 25px 15px;
+    color: #ffffff;
 }
 
 .sidebar img {
     width: 20px;
+    filter: invert(1);
 }
 
 .sidebar .menu {
@@ -23,10 +25,10 @@
     align-items: center;
     gap: 10px;
     padding: 10px 15px;
-    background-color: #e6eaf1;
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 50px;
     font-size: 14px;
-    color: grey;
+    color: rgb(255, 255, 255);
     cursor: pointer;
 }
 
@@ -48,12 +50,12 @@ margin-bottom: 20px;
     padding: 10px;
     padding-right: 40px;
     border-radius: 50px;
-    color: #282828;
+    color: #dedede;
     cursor: pointer;
 }
 
 .sidebar .recent-entry:hover {
-    background-color: #e2e6eb;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar .bottom {
@@ -70,3 +72,24 @@ margin-bottom: 20px;
         display: none;
     }
 }
+
+.dark-mode .sidebar {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.dark-mode .sidebar img {
+    filter: invert(0);
+}
+
+.dark-mode .sidebar .recent-entry,
+.dark-mode .sidebar .recent-title,
+.dark-mode .sidebar .new-chat,
+.dark-mode .sidebar .bottom-item {
+  color: #000000;
+}
+
+.dark-mode .sidebar .recent-entry:hover {
+  background-color: #e2e6eb;
+}
+
