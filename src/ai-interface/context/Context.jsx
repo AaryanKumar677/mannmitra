@@ -127,8 +127,7 @@ const ContextProvider = (props) => {
                     <p>Remember, it's okay to ask for help. I'm here to listen too.</p>
                 </div>
             `;
-            
-            // Add user message to history
+
             setConversations((prev) =>
                 prev.map((chat) =>
                 chat.id === chatId
@@ -162,7 +161,6 @@ const ContextProvider = (props) => {
             )
         );
         
-        
         let response;
         try {
             let updatedMessages = [
@@ -170,12 +168,12 @@ const ContextProvider = (props) => {
                 userMessage,
             ];
 
-            // Update state
             setConversations((prev) =>
                 prev.map((chat) =>
                     chat.id === chatId ? { ...chat, messages: updatedMessages } : chat
                 )
             );
+            
             
             const conversationHistory =
                 conversations.find((c) => c.id === chatId)?.messages.map((msg) => ({
@@ -223,7 +221,6 @@ const ContextProvider = (props) => {
             console.error("Error:", error);
             const errorResponse = "Sorry, there was an error processing your request. Please try again.";
             
-            // Add error response to history
             const aiResponse = {
                 type: 'ai',
                 text: errorResponse,
@@ -255,8 +252,8 @@ const ContextProvider = (props) => {
             messages: []
         };
 
-        setConversations(prev => [...prev, newConversation]); // ✅ add new empty chat
-        setCurrentChatId(chatId); // ✅ set active chat 
+        setConversations(prev => [...prev, newConversation]);
+        setCurrentChatId(chatId);
         setLoading(false);
         setShowResult(false);
         setSentImage(null);
@@ -270,6 +267,7 @@ const ContextProvider = (props) => {
         recentPrompt,
         showResult,
         loading,
+        setLoading,
         resultData,
         input,
         setInput,

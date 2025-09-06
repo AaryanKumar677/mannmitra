@@ -14,6 +14,27 @@ const Main = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
 
+  const [showScrollButton, setShowScrollButton] = useState(false);
+  const resultRef = useRef(null);
+
+  const checkScroll = () => {
+    if (!resultRef.current || !resultRef.current.scrollHeight) return;
+  
+    const { scrollTop, scrollHeight, clientHeight } = resultRef.current;
+    setShowScrollButton(scrollTop < scrollHeight - clientHeight - 100);
+  };
+
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      if (resultRef.current) {
+        resultRef.current.scrollTo({
+          top: resultRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+    }, 0);
+  };
+
   const toggleTheme = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
@@ -34,6 +55,19 @@ const Main = () => {
       document.body.classList.add('dark-mode');
     }
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+  
+    if (resultRef.current && isMounted) {
+      resultRef.current.scrollTop = resultRef.current.scrollHeight;
+      checkScroll();
+    }
+    
+    return () => {
+      isMounted = false;
+    };
+  }, [currentMessages]);
 
   // Enter key handler function
   const handleKeyPress = (e) => {
@@ -86,7 +120,9 @@ const Main = () => {
       </div>
       <div className="main-container">
         {currentMessages.length > 0 ? (
-          <div className="result">
+          <div className="result"
+              ref={resultRef}
+              onScroll={checkScroll}>
               {currentMessages.map((msg, index) => {
                 const cleanText = msg.text
                   ? msg.text
@@ -97,23 +133,22 @@ const Main = () => {
                 return (
                   <div key={index} className={msg.type === 'user' ? 'user-message-box' : 'ai-message-box'}>
                     <img src={msg.type === 'user' ? assets.user_icon : assets.gemini_icon} alt="" />
-                    
-                    <div className="message">
-                      {msg.text && (
-                        <div
-                          className="message-text"
-                          dangerouslySetInnerHTML={{ __html: md.render(cleanText) }}
-                        ></div>
-                      )}
-
-                      {msg.image && <img src={msg.image} alt="sent" />}
+                      <div className="message">
                       {msg.type === 'ai' && loading && index === currentMessages.length - 1 ? (
                         <div className="loader">
                           <hr className="animated-bg" />
                           <hr className="animated-bg" />
                           <hr className="animated-bg" />
                         </div>
-                      ) : null}
+                      ) : (
+                        msg.text && (
+                          <div
+                            className="message-text"
+                            dangerouslySetInnerHTML={{ __html: md.render(cleanText) }}
+                          ></div>
+                        )
+                      )}
+                      {msg.image && <img src={msg.image} alt="sent" />}
                     </div>
                   </div>
                 );
@@ -122,7 +157,7 @@ const Main = () => {
             ) : (
               <>
                 <div className="greet">
-                  <p><span>Hello, Aaryan</span></p>
+                  <p><span>Hello, buddy</span></p>
                   <p>How can I help you today?</p>
                 </div>
                 <div className="cards">
@@ -156,6 +191,12 @@ const Main = () => {
           </div>
         )}
 
+        {showScrollButton && (
+          <button className="scroll-to-bottom visible" onClick={scrollToBottom}>
+            ↓
+          </button>
+        )}
+
         <div className="main-bottom">
           <div className="search-box">
             {/* Theme Toggle Button */}
@@ -184,7 +225,6 @@ const Main = () => {
               id="file-input"
             />
             
-            {/* Updated input with Enter key support */}
             <input 
               onChange={(e) => setInput(e.target.value)} 
               value={input} 
@@ -193,7 +233,6 @@ const Main = () => {
               onKeyPress={handleKeyPress}
             />
             <div>
-                {/* Gallery icon pe click handler add karein */}
                 <img 
                   src={assets.gallery_icon} 
                   width={30} 
