@@ -72,10 +72,150 @@ margin-bottom: 20px;
     padding-right: 10px;
     cursor: pointer;
 }
+
 @media (max-width:600px) {
-    .sidebar{
-        display: none;
+
+    .mobile-menu-icon {
+        position: fixed;
+        top: 85px;
+        left: 5px;
+        z-index: 1001;
+        background: transparent;
+        border-radius: 0%;
+        width: 30px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 4px;
     }
+    
+    .mobile-menu-icon img {
+        width: 22px;
+        height: 25px;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: -260px;
+        width: 260px;
+        height: 100%;
+        z-index: 1000;
+        transition: all 0.3s ease;
+        display: flex !important;
+        flex-direction: column;
+        background: #ffffff;
+        color: #000000;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+   .sidebar .mobile-menu-icon {
+        display: none !important;
+    }
+
+    .sidebar .menu {
+        display: block !important;
+        position: relative;
+        z-index: 1001;
+        cursor: pointer;
+        margin: 15px;
+        width: 24px;
+        height: 24px;
+    }
+
+    .sidebar .top,
+    .sidebar .bottom,
+    .sidebar .new-chat,
+    .sidebar .recent,
+    .sidebar .recent-entry,
+    .sidebar .bottom-item {
+        visibility: visible !important;
+        opacity: 1 !important;
+        display: flex !important;
+        color: #000000 !important;
+    }
+
+    .sidebar.active ~ .mobile-menu-icon {
+        display: none !important;
+    }
+
+    :not(.dark-mode) .sidebar {
+        background: #ffffff;
+    }
+
+    body.light-mode .sidebar {
+        background: #252424;
+        color: #ffffff;
+    }
+
+    body.light-mode .sidebar .menu,
+    body.light-mode .sidebar img {
+        filter: invert(1);
+    }
+
+    body:not(.light-mode) .sidebar {
+        background: #ffffff;
+        color: #000000;
+    }
+    
+    .sidebar .menu, .sidebar img {
+        filter: invert(0);
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
+    
+    .overlay.active {
+        display: block;
+    }
+
+    .dark-mode .sidebar .menu {
+        filter: invert(1);
+    }
+
+    .dark-mode .mobile-menu-icon img {
+        filter: invert(1);
+    }
+    
+    .dark-mode .sidebar {
+        background: #252424;
+    }
+
+    .dark-mode .menu-toggle {
+        background: #ffffff;
+    }
+    
+    .dark-mode .menu-toggle img {
+        filter: invert(0);
+    }
+
+    
+    .dark-mode .sidebar .recent-entry,
+    .dark-mode .sidebar .recent-title,
+    .dark-mode .sidebar .new-chat,
+    .dark-mode .sidebar .bottom-item {
+    color: #ffffff;
+    }
+    .dark-mode .sidebar .new-chat:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-mode .sidebar .recent-entry:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    }
+
 }
 
 .dark-mode .sidebar {

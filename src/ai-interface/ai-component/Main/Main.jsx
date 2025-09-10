@@ -8,7 +8,9 @@ const Main = () => {
   const { conversations, currentChatId, onSent, setInput, input, loading, showResult } = useContext(Context);
   const currentChat = conversations.find(chat => chat.id === currentChatId);
   const currentMessages = currentChat ? currentChat.messages : [];
-  const md = new MarkdownIt();
+  const md = new MarkdownIt({
+    html: true,
+  });
 
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -77,7 +79,7 @@ const Main = () => {
   };
 
   const handleCardClick = async (promptText) => {
-    setInput(promptText);
+    setInput("");
     
     onSent(promptText, null);
   };
@@ -94,6 +96,7 @@ const Main = () => {
   const handleSend = () => {
     if (input.trim() !== '' || selectedImage) {
       onSent(input, selectedImage);
+      setInput("");
       setSelectedImage(null);
       
       // File input reset
@@ -115,7 +118,7 @@ const Main = () => {
   return (
     <div className='main'>
       <div className="nav">
-        <p>MannMitra</p>
+        <img src={assets.MannMitraname} alt="MannMitra" className="MannMitraname" />
         <img src={assets.user_icon} alt="" />
       </div>
       <div className="main-container">

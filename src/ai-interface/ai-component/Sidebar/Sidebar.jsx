@@ -5,102 +5,127 @@ import { Context } from '../../context/Context';
 
 const Sidebar = () => {
     const [extended, setExtended] = useState(false);
-    // const { onSent, prevPrompts, setRecentPrompt, newChat } = useContext(Context);
-    const { conversations, setCurrentChatId, newChat } = useContext(Context);
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+    const { conversations, setCurrentChatId, newChat, isLightMode } = useContext(Context);
     
-
-    // useEffect(() => {
-    //     const groups = [];
-    //     let currentGroup = [];
+    const [isMobile, setIsMobile] = useState(false);
+    
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth <= 600);
+        };
         
-    //     prevPrompts.forEach((item, index) => {
-            
-    //         if (item.type === 'user') {
-                
-    //             if (currentGroup.length > 0) {
-    //                 groups.push([...currentGroup]);
-    //             }
-    //             currentGroup = [item];
-    //         } 
-            
-    //         else if (item.type === 'ai' && currentGroup.length > 0) {
-    //             currentGroup.push(item);
-    //             groups.push([...currentGroup]);
-    //             currentGroup = [];
-    //         }
-            
-    //         else {
-    //             currentGroup.push(item);
-    //         }
-    //     });
-
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
         
-    //     if (currentGroup.length > 0) {
-    //         groups.push(currentGroup);
-    //     }
+        return () => {
+            window.removeEventListener('resize', checkMobile);
+        };
+    }, []);
 
-    //     setConversationGroups(groups);
-    // }, [prevPrompts]);
+    useEffect(() => {
+        if(isMobile) {
+            if(isLightMode) {
+                document.body.classList.add('light-mode');
+            } else {
+                document.body.classList.remove('light-mode');
+            }
+        } else {
+            document.body.classList.remove('light-mode');
+        }
+    }, [isLightMode, isMobile]);
 
-    // const loadConversation = async (conversation) => {
-        
-    //     const userMessage = conversation.find(msg => msg.type === 'user');
-    //     if (userMessage) {
-    //         await onSent(userMessage.text);
-    //         setRecentPrompt(userMessage.text);
-    //     }
-    // }
     const loadConversation = (chatId) => {
-        setCurrentChatId(chatId); // ✅ existing chat open karo
+        setCurrentChatId(chatId);
+        if (isMobile) {
+            closeMobileSidebar();
+        }
+    };
+
+    const handleNewChat = () => {
+        newChat();
+        if (isMobile) {
+            closeMobileSidebar();
+        }
+    };
+
+    const toggleMobileSidebar = () => {
+        setIsMobileSidebarOpen(!isMobileSidebarOpen);
+    };
+
+    const closeMobileSidebar = () => {
+        setIsMobileSidebarOpen(false);
     };
 
     return (
-    <div className='sidebar'>
-      <div className="top">
-        <img
-          src={assets.menu_icon}
-          alt=""
-          className="menu"
-          onClick={() => setExtended(prev => !prev)}
-        />
-        <div onClick={() => newChat()} className="new-chat">
-          <img src={assets.plus_icon} alt="" />
-          {extended ? <p>New Chat</p> : null}
-        </div>
+        <>
+            {isMobile && !isMobileSidebarOpen && (
+                <div className="mobile-menu-icon" onClick={toggleMobileSidebar}>
+                    <img src={assets.menu_icon} alt="Menu" />
+                </div>
+            )}
+            
+            {isMobile && (
+                <div 
+                    className={`overlay ${isMobileSidebarOpen ? 'active' : ''}`} 
+                    onClick={closeMobileSidebar}
+                ></div>
+            )}
 
-        {extended && (
-          <div className="recent">
-            <p className='recent-title'>Recent Chat</p>
-            {conversations.map(chat => (
-              <div
-                key={chat.id}
-                onClick={() => loadConversation(chat.id)}
-                className="recent-entry"
-              >
-                <img src={assets.message_icon} alt="" />
-                <p>{chat.title.slice(0, 18)}...</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+            {/* Sidebar */}
+            <div className={`sidebar ${isMobileSidebarOpen ? 'active' : ''}`}>
+                <div className="top">
+                    <img
+                        src={assets.menu_icon}
+                        alt=""
+                        className="menu"
+                        onClick={() => {
+                            if (isMobile) {
+                                toggleMobileSidebar();
+                            } else {
+                                setExtended(prev => !prev);
+                            }
+                        }}    
+                    />
+                    <div onClick={handleNewChat} className="new-chat">
+                        <img src={assets.plus_icon} alt="" />
+                        {extended ? <p>New Chat</p> : null}
+                    </div>
 
-      <div className="bottom">
-        <div className="bottom-item recent-entry">
-          <img src={assets.question_icon} alt="" />
-          {extended ? <p>Help</p> : null}
-        </div>
-        <div className="bottom-item recent-entry">
-          <img src={assets.history_icon} alt="" />
-          {extended ? <p>Activity</p> : null}
-        </div>
-        <div className="bottom-item recent-entry">
-          <img src={assets.setting_icon} alt="" />
-          {extended ? <p>Settings</p> : null}
-        </div>
-      </div>
-    </div>
-  );
+                    {extended && (
+                        <div className="recent">
+                            <p className='recent-title'>Recent Chat</p>
+                            {conversations.map(chat => (
+                                <div
+                                    key={chat.id}
+                                    onClick={() => loadConversation(chat.id)}
+                                    className="recent-entry"
+                                >
+                                    <img src={assets.message_icon} alt="" />
+                                    <p>{chat.title.slice(0, 18)}...</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                <div className="bottom">
+                    <div className="bottom-item recent-entry">
+                        <img src={assets.question_icon} alt="" />
+                        {extended ? <p>Help</p> : null}
+                    </div>
+                    <div className="bottom-item recent-entry">
+                        <img src={assets.history_icon} alt="" />
+                        {extended ? <p>Activity</p> : null}
+                    </div>
+                    <div className="bottom-item recent-entry">
+                        <img src={assets.setting_icon} alt="" />
+                        {extended ? <p>Settings</p> : null}
+                    </div>
+                </div>
+            </div>
+        </>
+    );
 }
 
-export default Sidebar
+export default Sidebar;
