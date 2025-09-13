@@ -113,7 +113,7 @@ margin-bottom: 20px;
         left: 0;
     }
 
-   .sidebar .mobile-menu-icon {
+    .sidebar .mobile-menu-icon {
         display: none !important;
     }
 
@@ -136,20 +136,15 @@ margin-bottom: 20px;
         visibility: visible !important;
         opacity: 1 !important;
         display: flex !important;
-        color: #000000 !important;
     }
 
     .sidebar.active ~ .mobile-menu-icon {
         display: none !important;
     }
 
-    :not(.dark-mode) .sidebar {
-        background: #ffffff;
-    }
-
     body.light-mode .sidebar {
-        background: #252424;
-        color: #ffffff;
+        background: #252424 !important;
+        color: #ffffff !important;
     }
 
     body.light-mode .sidebar .menu,
@@ -157,13 +152,43 @@ margin-bottom: 20px;
         filter: invert(1);
     }
 
-    body:not(.light-mode) .sidebar {
+    body.light-mode .sidebar .recent-entry,
+    body.light-mode .sidebar .recent-title,
+    body.light-mode .sidebar .new-chat,
+    body.light-mode .sidebar .bottom-item {
+        color: #ffffff;
+    }
+
+    body.dark-mode .mobile-menu-icon img {
+        filter: invert(1);
+    }
+
+    body.light-mode .sidebar .new-chat:hover,
+    body.light-mode .sidebar .recent-entry:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-mode .sidebar {
         background: #ffffff;
         color: #000000;
     }
-    
-    .sidebar .menu, .sidebar img {
+
+    body.dark-mode .sidebar .menu,
+    body.dark-mode .sidebar img {
         filter: invert(0);
+    }
+    
+
+    body.dark-mode .sidebar .recent-entry,
+    body.dark-mode .sidebar .recent-title,
+    body.dark-mode .sidebar .new-chat,
+    body.dark-mode .sidebar .bottom-item {
+        color: #000000;
+    }
+
+    body.dark-mode .sidebar .new-chat:hover,
+    body.dark-mode .sidebar .recent-entry:hover {
+        background-color: rgba(0, 0, 0, 0.05);
     }
 
     .overlay {
@@ -180,43 +205,8 @@ margin-bottom: 20px;
     .overlay.active {
         display: block;
     }
-
-    .dark-mode .sidebar .menu {
-        filter: invert(1);
-    }
-
-    .dark-mode .mobile-menu-icon img {
-        filter: invert(1);
-    }
-    
-    .dark-mode .sidebar {
-        background: #252424;
-    }
-
-    .dark-mode .menu-toggle {
-        background: #ffffff;
-    }
-    
-    .dark-mode .menu-toggle img {
-        filter: invert(0);
-    }
-
-    
-    .dark-mode .sidebar .recent-entry,
-    .dark-mode .sidebar .recent-title,
-    .dark-mode .sidebar .new-chat,
-    .dark-mode .sidebar .bottom-item {
-    color: #ffffff;
-    }
-    .dark-mode .sidebar .new-chat:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .dark-mode .sidebar .recent-entry:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    }
-
 }
+
 
 .dark-mode .sidebar {
   background-color: #ffffff;

@@ -19,7 +19,7 @@ const SYSTEM_INSTRUCTION = {
       - When asked "Who are you?" or "What is your name?" - respond "I am MannMitra, your AI friend and assistant!"
       - When asked "What can you do?" - explain you can help with questions, images, coding, writing, etc.
       - When asked "Tell me about yourself" - share that you're here to help and support users
-      - Always be helpful, friendly, and maintain your identity as MannMitra.
+      - Always be helpful, friendly, and maintain your identity as MannMitra, but do not repeat your introduction unless the user asks.
 
       IMPORTANT: Always remember these guidelines:
       1. Speak in a warm and supportive tone like a true friend
@@ -106,8 +106,7 @@ const SYSTEM_INSTRUCTION = {
   ]
 }
 
-// Text-only chats ke liye
-async function runChat(prompt) {
+async function runChat(prompt, history = []) {
     try {
         const model = genAI.getGenerativeModel({ 
             model: MODEL_NAME,
@@ -118,7 +117,7 @@ async function runChat(prompt) {
             temperature: 0.7,
             topK: 1,
             topP: 1,
-            maxOutputTokens: 1440, // Reduced for shorter responses
+            maxOutputTokens: 1440,
         };
 
         const safetySettings = [
@@ -143,7 +142,7 @@ async function runChat(prompt) {
         const chat = model.startChat({
             generationConfig,
             safetySettings,
-            history: []
+            history: history
         });
 
         const result = await chat.sendMessage(prompt);
@@ -155,7 +154,6 @@ async function runChat(prompt) {
     }
 }
 
-// Image analysis ke liye new function
 async function runChatWithImage(prompt, imageFile = null) {
     try {
         const model = genAI.getGenerativeModel({ 
@@ -163,7 +161,6 @@ async function runChatWithImage(prompt, imageFile = null) {
             systemInstruction: SYSTEM_INSTRUCTION
         });
 
-        // Image ko base64 mein convert karo
         const base64Image = await fileToGenerativePart(imageFile);
 
         const result = await model.generateContent([
@@ -179,7 +176,6 @@ async function runChatWithImage(prompt, imageFile = null) {
     }
 }
 
-// File to GenerativeAI format conversion
 async function fileToGenerativePart(imageFile) {
     const base64EncodedDataPromise = new Promise((resolve) => {
         const reader = new FileReader();
@@ -195,12 +191,11 @@ async function fileToGenerativePart(imageFile) {
     };
 }
 
-// Combined function jo dono handle karega
 async function runChatWithOptionalImage(prompt, imageFile = null, history = []) {
     if (imageFile) {
         return await runChatWithImage(prompt, imageFile);
     } else {
-        return await runChat(prompt);
+        return await runChat(prompt, history);
     }
 }
 

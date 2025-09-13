@@ -22,6 +22,7 @@
     width: 160px;
     height: auto;
     border-radius: 0;
+    object-fit: contain;
 }
 
 .main-container {

@@ -6,7 +6,6 @@ export const Context = createContext();
 const ContextProvider = (props) => {
     
     const [conversations, setConversations] = useState([]);
-    // const [prevPrompts, setPrevPrompts] = useState([]);
     const [input, setInput] = useState("");
     const [recentPrompt, setRecentPrompt] = useState(null);
     const [showResult, setShowResult] = useState(false)
@@ -47,8 +46,6 @@ const ContextProvider = (props) => {
     }
 
     const onSent = async (prompt, imageFile = null) => {
-        // const finalPrompt = prompt !== undefined ? prompt : input;
-        // if (!finalPrompt || finalPrompt.trim() === "") return;
         let finalPrompt = prompt !== undefined ? prompt : input;
 
         const chatId = currentChatId || Date.now().toString();
@@ -56,7 +53,18 @@ const ContextProvider = (props) => {
             setCurrentChatId(chatId);
             setConversations(prev => [
             ...prev,
-            { id: chatId, title: finalPrompt.slice(0, 20), messages: [] }
+            { 
+                id: chatId, 
+                title: finalPrompt.slice(0, 20), 
+                messages: [
+                { 
+                    type: "ai", 
+                    text: "👋 Hello! I’m MannMitra, your AI friend and assistant. How can I help you today?", 
+                    timestamp: new Date().toLocaleTimeString(), 
+                    chatId 
+                }
+                ] 
+            }
             ]);
         }
     
