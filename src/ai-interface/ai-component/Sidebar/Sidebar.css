@@ -19,8 +19,19 @@
     cursor: pointer;
 }
 
+.sidebar .features {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.sidebar .features .bottom-item {
+    padding: 2px 5px;
+}
+
 .sidebar .new-chat {
-    margin-top: 50px;
+    margin-top: 20px;
     display: inline-flex;
     align-items: center;
     gap: 10px;

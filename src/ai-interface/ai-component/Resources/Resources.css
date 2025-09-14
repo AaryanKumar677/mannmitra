@@ -1,0 +1,108 @@
+.booking-page.resources-page {
+  background: #0b0b0b;
+  min-height: 100vh;
+  padding: 48px 28px;
+  color: #e6eef8;
+  font-family: Inter, sans-serif;
+}
+
+.booking-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.booking-header h1 {
+  font-size: 36px;
+  color: #f1f7ff;
+  margin-bottom: 8px;
+}
+
+.booking-header .subtitle {
+  color: #a8b3c7;
+  font-size: 16px;
+}
+
+/* Section Titles */
+.resource-section {
+  margin-bottom: 50px;
+}
+
+.resource-section .section-title {
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #60a5fa;
+}
+
+/* Video grid */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+}
+
+/* Video card */
+.video-card {
+  background: #121212;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
+}
+
+.video-thumb {
+  font-size: 50px;
+  margin-bottom: 8px;
+}
+
+/* Card text */
+.card-title {
+  font-size: 18px;
+  color: #ecf6ff;
+  margin: 0;
+}
+
+.card-desc {
+  font-size: 14px;
+  color: #a8b3c7;
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  text-decoration: none;
+  text-align: center;
+}
+.btn-primary {
+  background: linear-gradient(90deg, #60a5fa, #5eead4);
+  color: #061422;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(94, 234, 212, 0.3);
+}
+
+/* Coming Soon */
+.coming-soon {
+  font-size: 20px;
+  color: #facc15;
+  text-align: center;
+  padding: 40px 0;
+  border: 2px dashed #a8b3c7;
+  border-radius: 14px;
+  background: #121212;
+}

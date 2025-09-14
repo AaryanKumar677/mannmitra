@@ -14,6 +14,9 @@ import code_icon from './code_icon.png'
 import send_icon from './send_icon.png'
 import gemini_icon from './gemini_icon.png'
 import MannMitraname from './MannMitraname.png'
+import booking_icon from './booking_icon.png';
+import resources_icon from './resources_icon.png';
+import dashboard_icon from './dashboard_icon.png';
 
 export const assets = {
     history_icon,
@@ -31,5 +34,8 @@ export const assets = {
     code_icon,
     send_icon,
     gemini_icon,
+    booking_icon,
+    resources_icon,
+    dashboard_icon,
     MannMitraname
 }

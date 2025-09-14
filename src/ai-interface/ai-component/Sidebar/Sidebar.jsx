@@ -3,7 +3,7 @@ import '../Sidebar/Sidebar.css'
 import { assets } from '../../../assets/assets'
 import { Context } from '../../context/Context';
 
-const Sidebar = () => {
+const Sidebar = ({ setActivePage }) => {   // 👈 naye prop for navigation
     const [extended, setExtended] = useState(false);
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const { conversations, setCurrentChatId, newChat, isLightMode } = useContext(Context);
@@ -40,6 +40,7 @@ const Sidebar = () => {
         if (isMobile) {
             closeMobileSidebar();
         }
+        setActivePage("chat"); // 👈 when chat is clicked
     };
 
     const handleNewChat = () => {
@@ -47,6 +48,7 @@ const Sidebar = () => {
         if (isMobile) {
             closeMobileSidebar();
         }
+        setActivePage("chat"); // 👈 new chat goes to chat page
     };
 
     const toggleMobileSidebar = () => {
@@ -87,6 +89,27 @@ const Sidebar = () => {
                             }
                         }}    
                     />
+
+                    <div className="features">
+                        <div className="bottom-item recent-entry" onClick={() => setActivePage("chat")}>
+                            <img src={assets.message_icon} alt="" />
+                            {extended ? <p>Chatbot</p> : null}
+                        </div>
+                        <div className="bottom-item recent-entry" onClick={() => setActivePage("booking")}>
+                            <img src={assets.booking_icon} alt="" />
+                            {extended ? <p>Booking</p> : null}
+                        </div>
+                        <div className="bottom-item recent-entry" onClick={() => setActivePage("resources")}>
+                            <img src={assets.resources_icon} alt="" />
+                            {extended ? <p>Resources</p> : null}
+                        </div>
+                        <div className="bottom-item recent-entry" onClick={() => setActivePage("dashboard")}>
+                            <img src={assets.dashboard_icon} alt="" />
+                            {extended ? <p>Dashboard</p> : null}
+                        </div>
+                    </div>
+
+                    
                     <div onClick={handleNewChat} className="new-chat">
                         <img src={assets.plus_icon} alt="" />
                         {extended ? <p>New Chat</p> : null}
@@ -108,8 +131,9 @@ const Sidebar = () => {
                         </div>
                     )}
                 </div>
-
+            
                 <div className="bottom">
+                    {/* Old Items */}
                     <div className="bottom-item recent-entry">
                         <img src={assets.question_icon} alt="" />
                         {extended ? <p>Help</p> : null}
@@ -129,3 +153,4 @@ const Sidebar = () => {
 }
 
 export default Sidebar;
+                                                                                                                                                                                                                                   
