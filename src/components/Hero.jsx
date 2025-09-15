@@ -13,7 +13,6 @@ const Hero = () => {
   const parallaxRef = useRef(null);
   const handleGetStarted = () => {
     window.open("./src/ai-interface/MannMitra.html", "_blank");
-    // "_blank" parameter new tab mein open karega
   };
 
   return (

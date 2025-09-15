@@ -3,7 +3,7 @@ import Sidebar from '../ai-interface/ai-component/Sidebar/Sidebar'
 import Main from '../ai-interface/ai-component/Main/Main'
 import Booking from './ai-component/Booking/Booking'
 import Resources from './ai-component/Resources/Resources'
-import Dashboard from './ai-component/Dashboard/Dashboard'
+// import Dashboard from './ai-component/Dashboard/Dashboard'
 
 const AIApp = () => {
   const [activePage, setActivePage] = useState("chat");  
