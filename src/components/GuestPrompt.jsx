@@ -209,7 +209,10 @@ export default function GuestPrompt({ open, onClose, title = "Welcome to MannMit
           <div style={actions}>
             <div style={secondaryRow}>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => {
+                  onClose?.();
+                  navigate("/login");
+                }}
                 onMouseEnter={() => setLoginHover(true)}
                 onMouseLeave={() => setLoginHover(false)}
                 style={loginStyle}
@@ -218,7 +221,10 @@ export default function GuestPrompt({ open, onClose, title = "Welcome to MannMit
               </button>
 
               <button
-                onClick={() => navigate("/signup")}
+                onClick={() => {
+                  onClose?.();
+                  navigate("/signup");
+                }}
                 onMouseEnter={() => setSignupHover(true)}
                 onMouseLeave={() => setSignupHover(false)}
                 style={signupStyle}

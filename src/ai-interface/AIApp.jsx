@@ -58,7 +58,6 @@ const AIApp = () => {
 
   return (
     <div style={{ display: "flex", width: "100vw", height: "100vh", flexDirection: "column" }}>
-      {/* GuestPrompt modal: show when guestModalOpen true */}
       <GuestPrompt open={guestModalOpen} onClose={() => setGuestModalOpen(false)} />
 
       <div style={{ display: "flex", flex: 1 }}>
