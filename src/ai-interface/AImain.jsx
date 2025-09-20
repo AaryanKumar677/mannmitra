@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import App from './AIApp.jsx';
 import './Aindex.css';
 import ContextProvider from './context/Context.jsx';
-import { AuthProvider } from '../context/AuthContext'; // <-- correct path
+import { AuthProvider } from '../context/AuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
