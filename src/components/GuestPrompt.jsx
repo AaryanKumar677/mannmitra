@@ -1,4 +1,3 @@
-// src/components/GuestPrompt.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +9,6 @@ export default function GuestPrompt({ open, onClose, title = "Welcome to MannMit
   const primaryRef = useRef(null);
   const previousActiveRef = useRef(null);
 
-  // hover states for button effects
   const [primaryHover, setPrimaryHover] = useState(false);
   const [loginHover, setLoginHover] = useState(false);
   const [signupHover, setSignupHover] = useState(false);
@@ -211,7 +209,7 @@ export default function GuestPrompt({ open, onClose, title = "Welcome to MannMit
               <button
                 onClick={() => {
                   onClose?.();
-                  navigate("/login");
+                  navigate("../Login");
                 }}
                 onMouseEnter={() => setLoginHover(true)}
                 onMouseLeave={() => setLoginHover(false)}
@@ -223,7 +221,7 @@ export default function GuestPrompt({ open, onClose, title = "Welcome to MannMit
               <button
                 onClick={() => {
                   onClose?.();
-                  navigate("/signup");
+                  navigate("../Signup");
                 }}
                 onMouseEnter={() => setSignupHover(true)}
                 onMouseLeave={() => setSignupHover(false)}

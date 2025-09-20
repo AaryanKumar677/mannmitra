@@ -1,4 +1,3 @@
-// src/pages/Signup.jsx
 import React, { useEffect, useState } from "react";
 import { supabase } from "../config/supabaseClient";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +20,6 @@ export default function Signup({ onClose }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
-  // OTP states
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
@@ -48,17 +46,15 @@ export default function Signup({ onClose }) {
 
   async function safeParseResponse(res) {
     const text = await res.text();
-    if (!text) return {}; // empty body -> return empty obj
+    if (!text) return {};
     try {
       return JSON.parse(text);
     } catch (err) {
-      // not valid JSON
       console.warn("safeParseResponse: invalid JSON from server:", text);
       return { _rawText: text };
     }
   }
 
-  // Send OTP -> calls Vercel endpoint /api/send-otp
   const sendOtp = async () => {
     setErrorMsg("");
     if (!form.email) return setErrorMsg("Please enter your email to verify.");
@@ -73,15 +69,12 @@ export default function Signup({ onClose }) {
 
       const j = await safeParseResponse(res);
 
-      // debug logs (remove in prod)
       console.log("send-otp response status:", res.status, "body:", j);
 
       if (!res.ok) {
-        // server returned non-2xx — prefer returned error message
         throw new Error(j.error || j.message || `Server error (${res.status})`);
       }
 
-      // success
       setOtpSent(true);
       setResendCooldown(60);
       setSuccessMsg(j.message || "OTP sent — check your email (also spam).");
@@ -93,7 +86,6 @@ export default function Signup({ onClose }) {
     }
   };
 
-  // Verify OTP -> calls /api/verify-otp
   const verifyOtp = async () => {
     setErrorMsg("");
     if (!form.email || !otp) return setErrorMsg("Enter OTP sent to email.");
@@ -121,7 +113,6 @@ export default function Signup({ onClose }) {
     }
   };
 
-  // Final Signup (only if emailVerified)
   const handleSignup = async (e) => {
     e.preventDefault();
     setErrorMsg("");

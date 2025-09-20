@@ -160,7 +160,7 @@ const ContextProvider = (props) => {
             text: prompt !== undefined ? prompt : input,
             image: imageFile ? URL.createObjectURL(imageFile) : null
         });
-        // Add user message to history
+        
         setConversations((prev) =>
             prev.map((chat) =>
                 chat.id === chatId

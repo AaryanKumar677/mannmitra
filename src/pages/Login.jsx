@@ -49,7 +49,6 @@ const Login = ({ onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
       <div className="bg-white text-gray-900 p-8 rounded-2xl shadow-xl w-96 relative">
-        {/* Close Button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-lg"

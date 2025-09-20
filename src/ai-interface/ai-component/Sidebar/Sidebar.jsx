@@ -3,7 +3,7 @@ import '../Sidebar/Sidebar.css'
 import { assets } from '../../../assets/assets'
 import { Context } from '../../context/Context';
 
-const Sidebar = ({ setActivePage }) => {   // 👈 naye prop for navigation
+const Sidebar = ({ setActivePage }) => {
     const [extended, setExtended] = useState(false);
     const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const { conversations, setCurrentChatId, newChat, isLightMode } = useContext(Context);
@@ -40,7 +40,7 @@ const Sidebar = ({ setActivePage }) => {   // 👈 naye prop for navigation
         if (isMobile) {
             closeMobileSidebar();
         }
-        setActivePage("chat"); // 👈 when chat is clicked
+        setActivePage("chat");
     };
 
     const handleNewChat = () => {

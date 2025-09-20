@@ -9,7 +9,6 @@ const API_KEY = "AIzaSyB7GUSbdkdE3te2jElQScymIBh5ih-zoBw";
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-// System instruction for MannMitra
 const SYSTEM_INSTRUCTION = {
   parts:[
     {

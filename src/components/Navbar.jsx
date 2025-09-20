@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 export default function Navbar() {
   const navigate = useNavigate();
 
-  // 🔹 Logout function
   async function handleLogout() {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -12,7 +11,7 @@ export default function Navbar() {
       alert("Logout failed ❌");
     } else {
       alert("Logged out successfully ✅");
-      navigate("/login"); // logout ke baad login page pe bhejo
+      navigate("/login");
     }
   }
 

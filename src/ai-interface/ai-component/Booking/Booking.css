@@ -175,11 +175,11 @@ html, body, #root { height: 100%; }
 .booking-page .modal-overlay{
   position: fixed !important;
   inset: 0 !important;
-  background: rgba(0,0,0,0.95) !important; /* nearly-black, almost fully opaque */
+  background: rgba(0,0,0,0.95) !important;
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
-  z-index: 99999 !important; /* very high so nothing sits above it */
+  z-index: 99999 !important;
   padding: 20px !important;
   pointer-events: auto;
   -webkit-backdrop-filter: none !important;
@@ -190,7 +190,7 @@ html, body, #root { height: 100%; }
 .booking-page .modal{
   width: 420px;
   max-width: calc(100% - 40px);
-  background-color: #071024 !important; /* solid dark color */
+  background-color: #071024 !important;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.06);
   padding: 20px;
@@ -206,20 +206,20 @@ html, body, #root { height: 100%; }
 }
 /* select dropdown inside modal */
 .booking-page .modal select {
-  background-color: #0f172a;  /* dark but not fully black */
-  color: #e6eef8;             /* text color */
+  background-color: #0f172a;
+  color: #e6eef8;
   border: 1px solid rgba(255,255,255,0.06);
 }
 
 /* option elements */
 .booking-page .modal select option {
-  background-color: #0f172a;  /* same as select background */
-  color: #e6eef8;             /* text color */
+  background-color: #0f172a;
+  color: #e6eef8;
 }
 
 /* hover on options */
 .booking-page .modal select option:hover {
-  background-color: #1e2a4f;  /* slightly lighter for hover */
+  background-color: #1e2a4f;
   color: #ffffff;
 }
 
