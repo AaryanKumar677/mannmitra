@@ -11,14 +11,15 @@ import Services from "./components/Services";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
-import Dashboard from "./pages/dashboard";
 import AIInterface from "./ai-interface/AIApp";
 
+import ContextProvider from "./ai-interface/context/Context";
+
 const App = () => {
+  console.log("App.jsx loaded (Routes will be inside Providers)");
   return (
-    <>
+    <ContextProvider>
       <Routes>
-        {/* Landing Page */}
         <Route
           path="/"
           element={
@@ -42,13 +43,10 @@ const App = () => {
         {/* Profile Page */}
         <Route path="/profile" element={<Profile />} />
 
-        {/* Dashboard Page */}
-        <Route path="/dashboard" element={<Dashboard />} />
-
         {/* AI Interface */}
         <Route path="/app" element={<AIInterface />} />
       </Routes>
-    </>
+    </ContextProvider>
   );
 };
 

@@ -48,7 +48,7 @@ const Sidebar = ({ setActivePage }) => {   // 👈 naye prop for navigation
         if (isMobile) {
             closeMobileSidebar();
         }
-        setActivePage("chat"); // 👈 new chat goes to chat page
+        setActivePage("chat");
     };
 
     const toggleMobileSidebar = () => {
@@ -58,6 +58,8 @@ const Sidebar = ({ setActivePage }) => {   // 👈 naye prop for navigation
     const closeMobileSidebar = () => {
         setIsMobileSidebarOpen(false);
     };
+
+    const communityIcon = assets.community_icon ?? assets.resources_icon ?? assets.message_icon;
 
     return (
         <>
@@ -103,10 +105,17 @@ const Sidebar = ({ setActivePage }) => {   // 👈 naye prop for navigation
                             <img src={assets.resources_icon} alt="" />
                             {extended ? <p>Resources</p> : null}
                         </div>
-                        <div className="bottom-item recent-entry" onClick={() => setActivePage("dashboard")}>
+
+                        {/* COMMUNITY BUTTON - ADDED */}
+                        <div className="bottom-item recent-entry" onClick={() => setActivePage("community")}>
+                            <img src={assets.community_icon} alt="Community" />
+                            {extended ? <p>Community</p> : null}
+                        </div>
+
+                        {/* <div className="bottom-item recent-entry" onClick={() => setActivePage("dashboard")}>
                             <img src={assets.dashboard_icon} alt="" />
                             {extended ? <p>Dashboard</p> : null}
-                        </div>
+                        </div> */}
                     </div>
 
                     
@@ -127,7 +136,7 @@ const Sidebar = ({ setActivePage }) => {   // 👈 naye prop for navigation
                                     <img src={assets.message_icon} alt="" />
                                     <p>{chat.title.slice(0, 18)}...</p>
                                 </div>
-                            ))}
+                            ))} 
                         </div>
                     )}
                 </div>
@@ -153,4 +162,3 @@ const Sidebar = ({ setActivePage }) => {   // 👈 naye prop for navigation
 }
 
 export default Sidebar;
-                                                                                                                                                                                                                                   

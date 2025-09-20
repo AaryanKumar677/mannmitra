@@ -8,12 +8,23 @@ import MenuSvg from "../assets/svg/MenuSvg";
 import { HamburgerMenu } from "./design/Header";
 import { useState } from "react";
 
+
 import Signup from "../pages/Signup";
+import Login from "../pages/Login";
+import Profile from "../pages/Profile";
+import { useAuth } from "../context/AuthContext";
+import { User } from "lucide-react";
+
 const Header = () => {
   const pathname = useLocation();
   const [openNavigation, setOpenNavigation] = useState(false);
 
   const [showSignup, setShowSignup] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  
+  const [showProfile, setShowProfile] = useState(false);
+
+  const { user, profile } = useAuth();
 
   const toggleNavigation = () => {
     if (openNavigation) {
@@ -71,17 +82,30 @@ const Header = () => {
             <HamburgerMenu />
           </nav>
 
-          {/* 👇 Popup trigger */}
-          <button
-            onClick={() => setShowSignup(true)}
-            className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block"
-          >
-            New account
-          </button>
+          {!user ? (
+            <>
+              <button
+                onClick={() => setShowSignup(true)}
+                className="button hidden mr-8 text-n-1/50 transition-colors hover:text-n-1 lg:block"
+              >
+                New account
+              </button>
 
-          <Button className="hidden lg:flex" href="#login">
-            Sign in
-          </Button>
+              <Button
+                className="hidden lg:flex"
+                onClick={() => setShowLogin(true)}
+              >
+                Sign in
+              </Button>
+            </>
+          ) : (
+            <button
+              onClick={() => setShowProfile(true)}
+              className="hidden lg:flex text-white hover:text-teal-300"
+            >
+              <User size={24} />
+            </button>
+          )}
 
           <Button
             className="ml-auto lg:hidden"
@@ -93,8 +117,9 @@ const Header = () => {
         </div>
       </div>
 
-      {/* 👇 Signup Popup */}
       {showSignup && <Signup onClose={() => setShowSignup(false)} />}
+      {showLogin && <Login onClose={() => setShowLogin(false)} />}
+      {showProfile && <Profile onClose={() => setShowProfile(false)} />}
     </>
   );
 };

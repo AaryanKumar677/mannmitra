@@ -1,11 +1,21 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './AIApp.jsx'
-import './Aindex.css'
-import ContextProvider from './context/Context.jsx'
+// src/ai-interface/AImain.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router } from 'react-router-dom';
+
+import App from './AIApp.jsx';
+import './Aindex.css';
+import ContextProvider from './context/Context.jsx';
+import { AuthProvider } from '../context/AuthContext'; // <-- correct path
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <ContextProvider>
-        <App />
-    </ContextProvider>
-)
+  <React.StrictMode>
+    <Router>
+      <AuthProvider>
+        <ContextProvider>
+          <App />
+        </ContextProvider>
+      </AuthProvider>
+    </Router>
+  </React.StrictMode>
+);

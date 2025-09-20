@@ -2,7 +2,6 @@ import { supabase } from "../config/supabaseClient";
 
 export async function signUp({ email, password, firstName, lastName, age, mobile }) {
   try {
-    // Step 1: Auth user create karo
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -12,18 +11,24 @@ export async function signUp({ email, password, firstName, lastName, age, mobile
 
     const user = authData.user;
 
-    // Step 2: Profile insert karo
     const { error: profileError } = await supabase
       .from("profiles")
       .insert([
         {
-          user_id: user.id,         // ✅ sahi column
+          user_id: user.id,
           first_name: firstName,
           last_name: lastName,
           age,
-          phone_numb: mobile,       // ✅ sahi column
+          phone_number: mobile,
+          email,
         },
       ]);
+    if (profileError) {
+      console.error("❌ Profile insert error:", profileError.message);
+    } else {
+      console.log("✅ Profile row inserted for user:", user.id);
+    }
+
 
     if (profileError) throw profileError;
 
@@ -49,22 +54,29 @@ export async function signIn({ email, password }) {
     return { error };
   }
 }
+
 export async function getProfile(userId) {
   try {
+    console.log("➡️ Fetching profile for userId:", userId);
+    
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("user_id", userId)
-      .single();
+      .maybeSingle();
 
-    if (error) throw error;
+    console.log("📄 Supabase response data:", data);
+    console.log("⚠️ Supabase response error:", error);  
+
+    if (error) return { error };
 
     return { profile: data };
   } catch (error) {
-    console.error("Get profile error:", error.message);
+    console.error("❌ Get profile error:", error.message);
     return { error };
   }
 }
+
 export async function updateProfile(userId, updates) {
   try {
     const { data, error } = await supabase

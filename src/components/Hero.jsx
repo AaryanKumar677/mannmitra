@@ -8,9 +8,11 @@ import { useRef, useState } from "react";
 import Generating from "./Generating";
 import Notification from "./Notification";
 import CompanyLogos from "./companyLogos";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
   const parallaxRef = useRef(null);
+  const navigate = useNavigate();
   const handleGetStarted = () => {
     window.open("./src/ai-interface/MannMitra.html", "_blank");
   };
